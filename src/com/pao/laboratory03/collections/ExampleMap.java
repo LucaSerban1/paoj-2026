@@ -4,7 +4,7 @@ import java.util.*;
 
 /**
  * Exemplu demonstrativ — Map-uri în Java.
- * Rulează acest main pentru a vedea cum funcționează HashMap, TreeMap și Map cu liste.
+ * "Rulează acest main pentru a vedea cum funcționează HashMap, TreeMap și Map cu liste.
  * Apoi rezolvă exercițiul din Main.java (date diferite, aceleași concepte).
  */
 public class ExampleMap {

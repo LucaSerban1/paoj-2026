@@ -1,5 +1,9 @@
 package com.pao.laboratory03.collections;
 
+import java.awt.image.AreaAveragingScaleFilter;
+import java.sql.SQLOutput;
+import java.util.*;
+
 /**
  * Exercițiul 1 — Colecții: HashMap și TreeMap
  *
@@ -50,7 +54,40 @@ package com.pao.laboratory03.collections;
  */
 public class Main {
     public static void main(String[] args) {
-        // TODO: implementează cele 3 părți de mai sus
+        String[] words = {"java", "python", "java", "c++", "python", "java", "rust", "c++", "go"};
+        Map<String, Integer> hashMap = new HashMap<String, Integer>();
+
+        for(String cuv: words)
+        {
+            hashMap.put(cuv, hashMap.getOrDefault(cuv, 0) + 1);
+        }
+
+        System.out.println("=== PARTEA A: HashMap — frecvența cuvintelor ===");
+        System.out.println("Frecvență: " + hashMap);
+        System.out.println("Conține 'rust'? " + hashMap.containsKey("rust"));
+        System.out.println("Chei: " + hashMap.keySet());
+        System.out.println("Valori: " + hashMap.values());
+
+        for(Map.Entry<String, Integer> limbaj: hashMap.entrySet()){
+            System.out.println(limbaj.getKey() + " -> " + limbaj.getValue());
+        }
+
+        System.out.println();
+        System.out.println("=== PARTEA B: TreeMap — sortare automată ===");
+        TreeMap<String, Integer> treeMap = new TreeMap<>(hashMap);
+        System.out.println("Sortat: " + treeMap);
+        System.out.println("Prima cheie: " + treeMap.firstKey());
+        System.out.println("Ultima cheie: " + treeMap.lastKey());
+
+        System.out.println();
+        System.out.println("=== PARTEA C: Map cu obiecte ===");
+        HashMap<String, List<String>> materii = new HashMap<>();
+        materii.put("PAOJ", new ArrayList<>(Arrays.asList("Ana", "Mihai", "Ion")));
+        materii.put("BD", new ArrayList<>(Arrays.asList("Ana", "Elena")));
+
+        System.out.println("PAOJ : " + materii.get("PAOJ"));
+        System.out.println("BD: " + materii.get("BD"));
     }
+
 }
 

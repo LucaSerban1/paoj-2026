@@ -1,5 +1,9 @@
 package com.pao.laboratory03.bonus;
 
+import com.pao.laboratory03.bonus.model.Priority;
+import com.pao.laboratory03.bonus.model.Status;
+import com.pao.laboratory03.bonus.service.TaskService;
+
 /**
  * Exercițiul 5 (Bonus) — Sistem de gestiune task-uri cu audit log
  *
@@ -32,7 +36,7 @@ package com.pao.laboratory03.bonus;
  *    - Metodă: double calculateScore(int baseDays)
  *      → returnează baseDays * multiplier (scor de urgență)
  *
- * ═══════════════════════════════════════════════════════
+ * ═══════════════════════════════════════════════════L════
  *  EXCEPȚII (creează 3 excepții custom)
  * ═══════════════════════════════════════════════════════
  *
@@ -57,7 +61,7 @@ package com.pao.laboratory03.bonus;
  *      → adaugă în ambele map-uri
  *      → logează: "[ADD] T001: 'Fix bug' (HIGH)"
  *
- *   b) void assignTask(String taskId, String assignee)
+ *   b) void assignTask(String taskId, String )
  *      → aruncă TaskNotFoundException dacă id-ul nu există
  *      → logează: "[ASSIGN] T001 → Ana"
  *
@@ -155,9 +159,32 @@ package com.pao.laboratory03.bonus;
  */
 public class Main {
     public static void main(String[] args) {
-        // TODO: implementează toți cei 10 pași de mai sus
-        // Creează TOATE clasele necesare în acest pachet (bonus/)
-        // Nu ai subpachete impuse — organizează cum consideri
+        TaskService service = TaskService.getInstance();
+        service.addTask("Fix login bug", Priority.CRITICAL);
+        service.addTask("Add dark mode", Priority.LOW);
+        service.addTask("Update docs", Priority.MEDIUM);
+        service.addTask("Fix memory leak", Priority.HIGH);
+        service.addTask("Refactor DB layer", Priority.HIGH);
+
+        service.assignTask("T001", "Ana");
+        service.assignTask("T003", "Mihai");
+        service.assignTask("T004", "Elena");
+
+        service.changeStatus("T001", Status.IN_PROGRESS);
+        service.changeStatus("T001", Status.DONE);
+        service.changeStatus("T003", Status.IN_PROGRESS);
+//        service.changeStatus("T001", Status.TODO);
+
+        System.out.println(service.getTasksByPriority(Priority.HIGH));
+        System.out.println(service.getStatusSummary());
+        System.out.println(service.getUnassignedTasks());
+        System.out.println(service.getTotalUrgencyScore(5));
+        service.printAuditLog();
+
+//        service.addTask("Add dark mode", Priority.LOW);
+//        service.assignTask("T999", "Dumy");
+
+
     }
 }
 
