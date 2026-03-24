@@ -1,4 +1,4 @@
-package com.pao.laboratory02.exercise3.model;
+package com.pao.laboratory03.exercise3.model;
 
 /**
  * TODO: Implementează Manager extends Angajat.
@@ -6,7 +6,7 @@ package com.pao.laboratory02.exercise3.model;
  * - Constructor: super(name, salariuBaza), this.nrSubordonati = nrSubordonati
  * - salariuTotal() = getSalariuBaza() * 2 + nrSubordonati * 100
  */
-public class Manager extends Angajat {
+public class Manager extends com.pao.laboratory02.exercise3.model.Angajat {
 
     // TODO: private int nrSubordonati
 
