@@ -20,9 +20,11 @@ Materiale și resurse pentru cursul **Programare Avansată pe Obiecte în Java**
 | [laboratory05](src/com/pao/laboratory05/Readme.md) | Records, Comparable aprofundat, Comparator multiplu              |
 | [laboratory06](src/com/pao/laboratory06/Readme.md) | Interfețe și clase — studiu detaliat (Comparable, Comparator, callback, extindere) |
 | [laboratory07](src/com/pao/laboratory07/Readme.md) | Sealed classes și enum-uri — concepte avansate                    |
+| [laboratory08](src/com/pao/laboratory08/Readme.md) | Interfețe marker, clonare superficială/profundă și introducere fluxuri I/O |
 
-- `laboratory06` va acoperi în profunzime interfețele Java și utilizarea lor împreună cu clase (design, best practices, patternuri simple).
-- `laboratory07` va introduce construcțiile mai noi din limbaj: `sealed` classes și un studiu mai aprofundat al `enum`-urilor.
+- `laboratory07` a introdus construcțiile mai noi din limbaj: `sealed` classes și un studiu mai aprofundat al `enum`-urilor.
+- `laboratory08` acoperă interfețele marker (`Cloneable`, `Serializable`), clonarea superficială vs. profundă și introducerea în fluxuri de I/O (`FileReader`, `BufferedReader`, `BufferedWriter`).
+- `laboratory09` va aprofunda fluxurile de I/O: `DataInputStream`/`DataOutputStream`, `RandomAccessFile`, `ByteBuffer`, `try-with-resources` și `Serializable` ca exercițiu obligatoriu.
 
 Începând cu **laboratory04**, soluțiile se trimit pe GitHub la un fork personal al acestui repo.
 **Data limită:** vineri, ora 23:59, în fiecare săptămână. Mai multe detalii doua sectiuni mai jos (TODO adauga link)
