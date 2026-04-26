@@ -1,0 +1,9 @@
+package Model;
+
+public enum TipServiciu {
+    SMS_ALERT,
+    INTERNET_BANKING,
+    ASIGURARE_CALATORIE,
+    PACHET_PREMIUM,
+    MANAGEMENT_PORTOFOLIU
+}
