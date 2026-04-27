@@ -17,6 +17,48 @@ public class Main {
         //    - SHALLOW <nume> → shallow clone + modifică orașul clonei la "MODIFICAT" + afișează
         //    - DEEP <nume> → deep clone + modifică orașul clonei la "MODIFICAT" + afișează
 
-        System.out.println("TODO: implementează exercițiul 1");
+
+        BufferedReader br=new BufferedReader(new FileReader(FILE_PATH));
+        String comanda;
+        Scanner sc=new Scanner(System.in);
+        comanda=sc.nextLine();
+        String line=br.readLine();
+        List<Student>lista=new ArrayList<>();
+        while(!line.isEmpty()){
+            String[] parts=line.split(",");
+            String nume=parts[0].trim();
+            Integer varsta=Integer.parseInt(parts[1].trim());
+            String oras=parts[2].trim();
+            String strada=parts[3].trim();
+            Adresa adresa=new Adresa(oras,strada);
+            Student student=new Student(nume,varsta,adresa);
+            lista.add(student);
+            line=br.readLine();
+        }
+        br.close();
+        if(comanda.equals("PRINT")){
+            for(Student s:lista){
+                System.out.println(s);
+            }
+        } else{
+            String[] tokens=comanda.split(" ");
+            String copytype=tokens[0];
+            String nume=tokens[1];
+            for(Student s:lista){
+                if(s.getNume().equals(nume)){
+                    Student clona;
+                    if(copytype.equals("SHALLOW")){
+                        clona=(Student)s.shallowClone();
+
+                    }else{
+                        clona=(Student)s.deepClone();
+                    }
+                    System.out.println("Original: "+s.toString());
+                    System.out.println("Clona: "+clona.toString());
+                }
+            }
+        }
+
+//        System.out.println("TODO: implementează exercițiul 1");
     }
 }

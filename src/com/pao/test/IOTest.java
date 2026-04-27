@@ -63,8 +63,8 @@ public class IOTest {
         File[] all = dir.listFiles();
         File[] partDirs = (all == null) ? new File[0]
                 : Arrays.stream(all)
-                  .filter(f -> f.isDirectory())
-                  .toArray(File[]::new);
+                .filter(f -> f.isDirectory())
+                .toArray(File[]::new);
         Arrays.sort(partDirs, Comparator.comparing(File::getName));
 
         if (partDirs.length == 0) {
