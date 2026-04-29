@@ -1,12 +1,17 @@
 package com.pao.laboratory09.exercise1;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
-    private static final String OUTPUT_FILE = "output/lab09_ex1.ser";
 
-    public static void main(String[] args) throws Exception {
+    private static final String SERIAL_FILE = "output/lab09_ex1.ser";
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        Scanner scanner = new Scanner(System.in);
+
         // TODO: Implementează conform Readme.md
         //
         // 1. Citește N din stdin, apoi cele N tranzacții (id suma data contSursa contDestinatie tip)
@@ -25,5 +30,6 @@ public class Main {
         //   Ex: [1] 2024-01-15 CREDIT: 1500.00 RON | RO01SRC1 -> RO01DST1
 
         System.out.println("TODO: implementează exercițiul 1");
+
     }
 }
