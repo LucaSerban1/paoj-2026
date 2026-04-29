@@ -1,9 +1,9 @@
 import Model.Client;
-import Model.Card.*;
-import Model.Cont.*;
+import Model.Card.Card;
+import Model.Cont.Cont;
 import Model.ServiciuBancar;
 import Model.TipServiciu;
-import Model.Tranzactie.*;
+import Model.Tranzactie.Tranzactie;
 import Service.BancaService;
 import Service.CardService;
 

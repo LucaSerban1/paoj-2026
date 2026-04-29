@@ -1,5 +1,7 @@
 package Model.Tranzactie;
 
+import Model.Tranzactie.TipTranzactie;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 

@@ -1,5 +1,7 @@
 package Model.Card;
 
+import Model.Card.Card;
+
 import java.time.LocalDate;
 
 public class CardDebit extends Card {

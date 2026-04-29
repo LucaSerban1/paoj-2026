@@ -1,5 +1,7 @@
 package Model.Card;
 
+import Model.Card.Card;
+
 import java.time.LocalDate;
 
 import Exceptii.LimitaCreditDepasitaException;

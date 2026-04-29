@@ -1,10 +1,14 @@
 package Service;
 
-import Model.*;
-import Model.Cont.*;
+import Model.Cont.Cont;
+import Model.Cont.ContEconomii;
+import Model.Cont.ContCurent;
 import Exceptii.FonduriInsuficienteException;
-import Model.Card.*;
-import Model.Tranzactie.*;
+import Model.Client;
+import Model.Tranzactie.TipTranzactie;
+import Model.Tranzactie.Tranzactie;
+import Model.ExtrasDecont;
+import Model.ServiciuBancar;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

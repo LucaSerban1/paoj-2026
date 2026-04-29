@@ -1,4 +1,5 @@
 package Model;
+import Model.TipServiciu;
 
 import java.time.LocalDate;
 
@@ -29,7 +30,7 @@ public class ServiciuBancar {
 
     public boolean esteActiv() {
         if (dataActivare == null) {
-            return false; // Ca măsură de siguranță
+            return false;
         }
 
         LocalDate dataCurenta = LocalDate.now();
