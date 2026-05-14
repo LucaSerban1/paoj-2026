@@ -124,7 +124,7 @@ public class Main {
         );
         System.out.println();
 
-        System.out.println("12: Tranzactii sortate dupa data (Ion Curent)");
+        System.out.println("12: Tranzactii sortate dupa data");
         List<Tranzactie> tranzactii = bancaService.sorteazaTranzactii(ibanCurentIon);
         if (tranzactii.isEmpty()) {
             System.out.println("  Nu exista tranzactii.");
@@ -151,6 +151,5 @@ public class Main {
         System.out.println("15: Stergere client");
         bancaService.stergeClient(alex.getCnp());
         System.out.println("  Clienti ramasi: " + bancaService.listeazaTotiClientii().size());
-
     }
 }
