@@ -31,6 +31,70 @@ public class Main {
         // Format linie output:
         //   [idx] id=<id> data=<data> tip=<CREDIT|DEBIT> suma=<suma:.2f> RON status=<STATUS>
 
-        System.out.println("TODO: implementează exercițiul 2");
+        Scanner scanner = new Scanner(System.in);
+        try {
+            if (!scanner.hasNextInt()) return;
+            int n = scanner.nextInt();
+
+            try (FileOutputStream fos = new FileOutputStream(OUTPUT_FILE);
+                 DataOutputStream dos = new DataOutputStream(fos)) {
+
+                for (int i = 0; i < n; i++) {
+                    int id = scanner.nextInt();
+                    double suma = scanner.nextDouble();
+                    String data = scanner.next();
+                    TipTranzactie tip = TipTranzactie.valueOf(scanner.next());
+
+                    dos.write(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(id).array());
+                    dos.write(ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putDouble(suma).array());
+
+                    String dataPadded = String.format("%-10s", data);
+                    dos.write(dataPadded.getBytes());
+
+                    dos.write(tip == TipTranzactie.CREDIT ? 0 : 1);
+                    dos.write(0);
+                    dos.write(new byte[8]);
+                }
+            }
+
+            try (RandomAccessFile raf = new RandomAccessFile(OUTPUT_FILE, "rw")) {
+                while (scanner.hasNext()) {
+                    String command = scanner.next();
+                    if (command.equals("READ")) {
+                        int idx = scanner.nextInt();
+                        readAndPrint(raf, idx);
+                    } else if (command.equals("UPDATE")) {
+                        int idx = scanner.nextInt();
+                        Status newStatus = Status.valueOf(scanner.next());
+                        raf.seek((long) idx * RECORD_SIZE + 23);
+                        raf.write(newStatus.value);
+                        System.out.println("Updated [" + idx + "]: " + newStatus);
+                    } else if (command.equals("PRINT_ALL")) {
+                        long totalRecords = raf.length() / RECORD_SIZE;
+                        for (int i = 0; i < totalRecords; i++) {
+                            readAndPrint(raf, i);
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void readAndPrint(RandomAccessFile raf, int idx) throws IOException {
+        byte[] buffer = new byte[RECORD_SIZE];
+        raf.seek((long) idx * RECORD_SIZE);
+        raf.readFully(buffer);
+
+        ByteBuffer bb = ByteBuffer.wrap(buffer).order(ByteOrder.LITTLE_ENDIAN);
+        int id = bb.getInt(0);
+        double suma = bb.getDouble(4);
+        String data = new String(buffer, 12, 10).trim();
+        TipTranzactie tip = (buffer[22] == 0) ? TipTranzactie.CREDIT : TipTranzactie.DEBIT;
+        Status status = Status.fromInt(buffer[23]);
+
+        System.out.printf("[%d] id=%d data=%s tip=%s suma=%.2f RON status=%s\n",
+                idx, id, data, tip, suma, status);
     }
 }

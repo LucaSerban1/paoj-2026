@@ -1,12 +1,8 @@
 package com.pao.laboratory09.exercise1;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class Tranzactie implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     private int id;
@@ -17,8 +13,7 @@ public class Tranzactie implements Serializable {
     private TipTranzactie tip;
     private transient String note;
 
-    public Tranzactie(int id, double suma, String data,
-                      String contSursa, String contDestinatie, TipTranzactie tip) {
+    public Tranzactie(int id, double suma, String data, String contSursa, String contDestinatie, TipTranzactie tip) {
         this.id = id;
         this.suma = suma;
         this.data = data;
@@ -26,23 +21,8 @@ public class Tranzactie implements Serializable {
         this.contDestinatie = contDestinatie;
         this.tip = tip;
     }
-
-    private void writeObject(ObjectOutputStream oos) throws IOException {
-        this.note = "procesat";
-        oos.defaultWriteObject();
-    }
-
-    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        ois.defaultReadObject();
-        this.note = null;
-    }
-
     public int getId() { return id; }
-    public double getSuma() { return suma; }
     public String getData() { return data; }
-    public String getContSursa() { return contSursa; }
-    public String getContDestinatie() { return contDestinatie; }
-    public TipTranzactie getTip() { return tip; }
     public String getNote() { return note; }
     public void setNote(String note) { this.note = note; }
 
