@@ -1,10 +1,10 @@
-package com.pao.laboratory07.exercise2;
-
-import java.util.*;
+//package com.pao.laboratory07.exercise2;
+//
+//import java.util.*;
 //import com.pao.laboratory07.exercise1.OrderState;
-
-public class Main {
-    public static void main(String[] args) {
+//
+//public class Main {
+//    public static void main(String[] args) {
 //        Scanner sc = new Scanner(System.in);
 //        int n = Integer.parseInt(sc.nextLine().trim());
 //        List<Comanda> comenzi = new ArrayList<>();
@@ -47,5 +47,5 @@ public class Main {
 //        if (nrGift > 0)
 //            System.out.printf("GIFT: suma = 0.00 lei, numar = %d\n", nrGift);
 //        System.out.printf("Total platit: %.2f lei\n", sumaStandard + sumaDiscounted);
-    }
-}
+//    }
+//}
