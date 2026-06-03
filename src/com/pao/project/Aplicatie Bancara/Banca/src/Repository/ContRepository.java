@@ -22,7 +22,7 @@ public class ContRepository implements Repository<Cont, String> {
         String sql =
             "INSERT INTO conturi (iban, cnp_client, tip_cont, sold, data_deschidere, " +
             "limita_descoperit, comision_lunar, rata_dobanda, perioada_minima) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (iban) DO NOTHING";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
             ps.setString(1, cont.getNumarCont());
             ps.setString(2, cont.getIdClient());
@@ -117,7 +117,6 @@ public class ContRepository implements Repository<Cont, String> {
         }
     }
 
-    // JOIN 2: conturi cu numele clientului si numarul de tranzactii
     public List<String> findConturiCuInfoClient() {
         String sql =
             "SELECT co.iban, co.tip_cont, co.sold, cl.nume, COUNT(t.id) AS nr_tranzactii " +

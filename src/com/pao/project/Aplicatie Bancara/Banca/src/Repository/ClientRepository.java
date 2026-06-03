@@ -16,7 +16,7 @@ public class ClientRepository implements Repository<Client, String> {
 
     @Override
     public void save(Client client) {
-        String sql = "INSERT INTO clienti (cnp, nume, email) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO clienti (cnp, nume, email) VALUES (?, ?, ?) ON CONFLICT (cnp) DO NOTHING";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
             ps.setString(1, client.getCnp());
             ps.setString(2, client.getNume());
@@ -82,7 +82,6 @@ public class ClientRepository implements Repository<Client, String> {
         }
     }
 
-    // JOIN 1: clienti cu numarul lor de tranzactii
     public List<String> findTotiClientiiCuNrTranzactii() {
         String sql =
             "SELECT cl.cnp, cl.nume, COUNT(t.id) AS nr_tranzactii " +

@@ -12,6 +12,12 @@ import Service.AuditService;
 import Service.BancaService;
 import Service.CardService;
 
+import Util.DatabaseConnection;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +28,6 @@ public class Main {
 
         BancaService bancaService = BancaService.getInstance();
         CardService cardService   = CardService.getInstance();
-
-        // =========================================================
-        //  Etapa I — demonstratie in-memory (cu audit automat)
-        // =========================================================
 
         System.out.println("1: Adaugare clienti");
         Client ion   = new Client("1900101123456", "Ion Popescu",     "ion@email.ro");
@@ -162,48 +164,36 @@ public class Main {
         bancaService.stergeClient(alex.getCnp());
         System.out.println("  Clienti ramasi: " + bancaService.listeazaTotiClientii().size());
 
-        // =========================================================
-        //  Etapa II — Persistenta JDBC, Tranzactii si Audit
-        // =========================================================
-
-        System.out.println("\n=== ETAPA II: PERSISTENTA JDBC ===");
-        System.out.println("(Asigurati-va ca MySQL ruleaza si baza de date 'paoj_banca' exista)");
-        System.out.println("(Rulati schema.sql inainte de prima pornire)\n");
 
         try {
+            resetSchema();
+
             ClientRepository     clientRepo     = new ClientRepository();
             ContRepository       contRepo       = new ContRepository();
             CardRepository       cardRepo       = new CardRepository();
             TranzactieRepository tranzactieRepo = new TranzactieRepository();
 
-            // --- 16: Salvare clienti si conturi in DB ---
             System.out.println("16: Salvare clienti, conturi, carduri si tranzactii in baza de date");
 
-            // Clienti ramasi dupa stergerea lui Alex
             for (Client c : bancaService.listeazaTotiClientii()) {
                 clientRepo.save(c);
                 System.out.println("  Client salvat: " + c.getNume());
             }
 
-            // Conturi (toate, inclusiv ale lui alex — sterse din memory dar dorim demo complet)
             for (Cont cont : bancaService.getConturi().values()) {
-                // Salvam doar conturile clientilor existenti in DB
                 if (clientRepo.findById(cont.getIdClient()).isPresent()) {
                     contRepo.save(cont);
                     System.out.println("  Cont salvat: " + cont.getNumarCont() + " (" + cont.getClass().getSimpleName() + ")");
                 }
             }
 
-            // Carduri active
             for (Card card : cardService.getCarduri().values()) {
                 cardRepo.save(card);
                 System.out.println("  Card salvat: " + card.getNumarCard());
             }
 
-            // Tranzactii (au iban setat prin setIban in inregistreazaTranzactie)
             for (Map.Entry<String, List<Tranzactie>> entry : bancaService.getIstoricTranzactii().entrySet()) {
                 String iban = entry.getKey();
-                // Salvam tranzactiile doar pentru conturile persistate
                 if (contRepo.findById(iban).isPresent()) {
                     for (Tranzactie t : entry.getValue()) {
                         tranzactieRepo.save(t);
@@ -212,12 +202,10 @@ public class Main {
             }
             System.out.println();
 
-            // --- 17: Transfer cu tranzactie JDBC explicita ---
             System.out.println("17: Transfer persistent cu tranzactie JDBC (commit/rollback)");
             bancaService.executaTransferPersistent(ibanCurentIon, ibanCurentMaria, 200.0);
             System.out.println();
 
-            // --- 18: Interogare JDBC simpla (findAll / findById) ---
             System.out.println("18: Clienti din baza de date:");
             for (Client c : clientRepo.findAll()) {
                 System.out.println("  " + c.getCnp() + " | " + c.getNume() + " | " + c.getEmail());
@@ -231,7 +219,6 @@ public class Main {
             }
             System.out.println();
 
-            // --- 19: Interogari avansate cu JOIN ---
             System.out.println("19a: JOIN — Clienti cu numarul de tranzactii:");
             for (String linie : clientRepo.findTotiClientiiCuNrTranzactii()) {
                 System.out.println("  " + linie);
@@ -266,8 +253,24 @@ public class Main {
             System.out.println("Configurati db.properties si rulati schema.sql pentru a activa persistenta.");
         }
 
-        // --- 20: Verificare fisier audit ---
         System.out.println("\n20: Fisier audit.csv generat cu actiunile executate.");
+    }
+
+    private static void resetSchema() throws Exception {
+        String sql;
+        try (InputStream is = Main.class.getClassLoader().getResourceAsStream("schema.sql")) {
+            if (is == null) throw new RuntimeException("schema.sql nu a fost gasit in classpath");
+            sql = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        }
+        Connection conn = DatabaseConnection.getInstance().getConnection();
+        for (String stmt : sql.split(";")) {
+            String trimmed = stmt.trim();
+            if (!trimmed.isEmpty()) {
+                try (Statement s = conn.createStatement()) {
+                    s.execute(trimmed);
+                }
+            }
+        }
         System.out.println("  Calea: audit.csv (in directorul de lucru al aplicatiei)");
 
         AuditService.getInstance().log("sfarsit_sesiune");

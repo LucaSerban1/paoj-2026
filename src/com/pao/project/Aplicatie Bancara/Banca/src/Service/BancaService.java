@@ -15,6 +15,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.UUID;
 
 public class BancaService {
     private final TreeMap<String, Client> clienti;
@@ -160,17 +161,11 @@ public class BancaService {
         audit.log("transfer");
     }
 
-    /**
-     * Transfer persistent cu tranzactie JDBC explicita:
-     * actualizeaza soldul ambelor conturi si insereaza doua tranzactii
-     * atomic (commit la succes, rollback la eroare).
-     */
     public void executaTransferPersistent(String ibanSursa, String ibanDest, double suma) {
         Connection conn = DatabaseConnection.getInstance().getConnection();
         try {
             conn.setAutoCommit(false);
             try {
-                // Scade soldul din contul sursa
                 try (PreparedStatement ps = conn.prepareStatement(
                         "UPDATE conturi SET sold = sold - ? WHERE iban = ?")) {
                     ps.setDouble(1, suma);
@@ -178,7 +173,6 @@ public class BancaService {
                     ps.executeUpdate();
                 }
 
-                // Adauga soldul in contul destinatie
                 try (PreparedStatement ps = conn.prepareStatement(
                         "UPDATE conturi SET sold = sold + ? WHERE iban = ?")) {
                     ps.setDouble(1, suma);
@@ -186,11 +180,10 @@ public class BancaService {
                     ps.executeUpdate();
                 }
 
-                // Insereaza tranzactia pentru contul sursa
                 try (PreparedStatement ps = conn.prepareStatement(
                         "INSERT INTO tranzactii (id, iban, suma, tip_tranzactie, data_tranzactie, descriere) " +
                         "VALUES (?, ?, ?, ?, ?, ?)")) {
-                    ps.setString(1, "TRX" + System.currentTimeMillis());
+                    ps.setString(1, "TRX" + UUID.randomUUID());
                     ps.setString(2, ibanSursa);
                     ps.setDouble(3, suma);
                     ps.setString(4, TipTranzactie.TRANSFER.name());
@@ -199,11 +192,10 @@ public class BancaService {
                     ps.executeUpdate();
                 }
 
-                // Insereaza tranzactia pentru contul destinatie
                 try (PreparedStatement ps = conn.prepareStatement(
                         "INSERT INTO tranzactii (id, iban, suma, tip_tranzactie, data_tranzactie, descriere) " +
                         "VALUES (?, ?, ?, ?, ?, ?)")) {
-                    ps.setString(1, "TRX" + (System.currentTimeMillis() + 1));
+                    ps.setString(1, "TRX" + UUID.randomUUID());
                     ps.setString(2, ibanDest);
                     ps.setDouble(3, suma);
                     ps.setString(4, TipTranzactie.TRANSFER.name());
@@ -281,7 +273,7 @@ public class BancaService {
 
     private void inregistreazaTranzactie(String iban, double suma,
                                          TipTranzactie tip, String descriere) {
-        String id = "TRX" + System.currentTimeMillis();
+        String id = "TRX" + UUID.randomUUID();
         Tranzactie t = new Tranzactie(id, suma, tip, LocalDateTime.now(), descriere);
         t.setIban(iban);
         istoricTranzactii.get(iban).add(t);

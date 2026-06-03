@@ -24,7 +24,7 @@ public class CardRepository implements Repository<Card, String> {
         String sql =
             "INSERT INTO carduri (numar_card, iban, cnp_client, tip_card, data_expirare, cvv, activ, " +
             "limita_zilnica, contactless, limita_credit, sold_utilizat) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (numar_card) DO NOTHING";
         try (PreparedStatement ps = getConn().prepareStatement(sql)) {
             ps.setString(1, card.getNumarCard());
             ps.setString(2, card.getIdCont());
@@ -119,7 +119,6 @@ public class CardRepository implements Repository<Card, String> {
         }
     }
 
-    // JOIN 3: carduri active cu informatii despre cont si client
     public List<String> findCarduriActiveCuInfoClient() {
         String sql =
             "SELECT ca.numar_card, ca.tip_card, ca.data_expirare, " +

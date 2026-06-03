@@ -113,7 +113,6 @@ public class TranzactieRepository implements Repository<Tranzactie, String> {
         return lista;
     }
 
-    // JOIN: tranzactii cu detalii despre cont si client
     public List<String> findTranzactiiCuInfoClient() {
         String sql =
             "SELECT t.id, t.suma, t.tip_tranzactie, t.data_tranzactie, t.descriere, " +
